@@ -10,7 +10,6 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-6 md:mb-0">
-            <Flame className="w-6 h-6 text-primary-500 mr-2" />
             <span className="text-lg font-bold tracking-tight">
               <span className="text-primary-500">Extreme</span>
               <span className="text-white">Leaks</span>
@@ -32,7 +31,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-8 pt-6 border-t border-gray-800">
           <p className="text-gray-500 text-center text-sm">
-            &copy; {currentYear} ExtremeLeaks. All rights reserved. Content intended for adults 18+.
+          &copy; {currentYear} ExtremeLeaks. Some rights reserved. Content intended for adults 18+.
           </p>
         </div>
       </div>

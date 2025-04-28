@@ -53,7 +53,6 @@ useEffect(() => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center space-x-2">
-              <Flame className="w-8 h-8 text-primary-500" />
               <span className="text-xl font-bold tracking-tight">
                 <span className="text-primary-500">Extreme</span>
                 <span className="text-white">Leaks</span>
