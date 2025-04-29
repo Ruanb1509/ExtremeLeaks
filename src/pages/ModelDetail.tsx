@@ -40,7 +40,7 @@ const ModelDetail: React.FC = () => {
   }, []);
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/');
   };
 
 
@@ -117,7 +117,7 @@ const ModelDetail: React.FC = () => {
                   className="group"
                 >
                   <span className="flex items-center justify-center">
-                    Download Content
+                    Mega Link
                     <ExternalLink size={18} className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </Button>

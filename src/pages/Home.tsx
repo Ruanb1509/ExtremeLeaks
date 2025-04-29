@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ModelCard from '../components/ui/ModelCard';
+import SearchInput from '../components/ui/SearchInput';
 import { models } from '../data/models';
-import { Flame, TrendingUp, Clock, Link2, ExternalLink } from 'lucide-react';
+import { Flame, TrendingUp, Clock, Link2, ExternalLink, Search } from 'lucide-react';
 import type { Model, SortOption, AdNetwork } from '../types';
-import { linkvertise } from '../components/Linkvertise/Linkvertise';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -14,12 +14,12 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [adNetwork, setAdNetwork] = useState<AdNetwork>('linkvertise');
   const [showAdChoice, setShowAdChoice] = useState(false);
-  const [slug, setSlug] = useState('')
+  const [slug, setSlug] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
 
   useEffect(() => {
     setIsLoading(true);
@@ -44,11 +44,19 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, [sortOption]);
 
-  
+  // Apply name filter to the sorted models
+  const filteredModels = sortedModels.filter(model => 
+    model.name.toLowerCase().includes(nameFilter.toLowerCase())
+  );
 
-  const totalPages = Math.ceil(sortedModels.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredModels.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const displayedModels = sortedModels.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const displayedModels = filteredModels.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Reset to first page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [nameFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -153,6 +161,21 @@ const Home: React.FC = () => {
             </div>
           </div>
           
+          {/* Search Input */}
+          <div className="mb-6">
+            <SearchInput
+              value={nameFilter}
+              onChange={setNameFilter}
+              placeholder="Search by model name..."
+              className="max-w-md mx-auto"
+            />
+            {nameFilter && (
+              <p className="text-gray-400 text-center mt-2">
+                Found {filteredModels.length} result{filteredModels.length !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
+          
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 min-h-[800px]">
           {isLoading ? (
               Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
@@ -161,10 +184,21 @@ const Home: React.FC = () => {
                   className="aspect-[3/4] bg-dark-200 rounded-lg animate-pulse"
                 />
               ))
-            ) : (
+            ) : displayedModels.length > 0 ? (
               displayedModels.map((model) => (
                 <ModelCard key={model.id} model={model} />
               ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                <Search size={48} className="text-gray-600 mb-4" />
+                <p className="text-gray-400 text-xl">No models found matching "{nameFilter}"</p>
+                <button 
+                  onClick={() => setNameFilter('')}
+                  className="mt-4 text-primary-500 hover:text-primary-400 transition-colors"
+                >
+                  Clear search
+                </button>
+              </div>
             )}
           </div>
 
