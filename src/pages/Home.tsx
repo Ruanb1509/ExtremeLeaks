@@ -3,8 +3,9 @@ import ModelCard from '../components/ui/ModelCard';
 import { models } from '../data/models';
 import { Flame, TrendingUp, Clock, Link2, ExternalLink } from 'lucide-react';
 import type { Model, SortOption, AdNetwork } from '../types';
+import { linkvertise } from '../components/Linkvertise/Linkvertise';
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 12;
 
 const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,19 +21,27 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => {
-      const sorted = [...models].sort((a, b) => {
-        if (sortOption === 'recent') {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        }
-        return b.views - a.views;
-      });
-      setSortedModels(sorted);
-      setIsLoading(false);
+  
+    const timer = setTimeout(async () => {
+      try {
+        const allModels = await models();
+        const sorted = [...allModels].sort((a, b) => {
+          if (sortOption === 'recent') {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          }
+          return b.views - a.views;
+        });
+        setSortedModels(sorted);
+      } catch (error) {
+        console.error('Erro ao buscar modelos:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }, 300);
-
+  
     return () => clearTimeout(timer);
   }, [sortOption]);
+  
 
   const totalPages = Math.ceil(sortedModels.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -141,8 +150,8 @@ const Home: React.FC = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 min-h-[800px]">
-            {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 min-h-[800px]">
+          {isLoading ? (
               Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
                 <div
                   key={index}

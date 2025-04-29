@@ -48,10 +48,6 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
               <Eye size={14} className="mr-1 text-primary-500" />
               <span>{formatViews(model.views)}</span>
             </div>
-            <div className="flex items-center">
-              <Clock size={14} className="mr-1 text-primary-500" />
-              <span>{formatDate(model.createdAt)}</span>
-            </div>
           </div>
         </div>
       </div>
