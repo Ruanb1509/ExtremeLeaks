@@ -45,17 +45,17 @@ const ModelDetail: React.FC = () => {
 
 
 
-  // const handleDownload = async () => {
-  //   if (model) {
-  //     try {
-  //       await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/${model.id}/view`);
-  //       window.open(model.megaLink, '_blank');
-  //     } catch (error) {
-  //       console.error('Erro ao contar visualização:', error);
-  //       window.open(model.megaLink, '_blank');
-  //     }
-  //   }
-  // };
+    const handleDownload = async () => {
+      if (model) {
+        try {
+          await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/${model.id}/view`);
+          window.open(model.megaLink, '_blank');
+        } catch (error) {
+          console.error('Erro ao contar visualização:', error);
+          window.open(model.megaLink, '_blank');
+        }
+      }
+  };
 
   if (loading) {
     return (
@@ -109,11 +109,11 @@ const ModelDetail: React.FC = () => {
                 <p className="text-white font-medium">Click the button below to visit the Mega link</p>
               </div>
 
-              <a href={model.megaLink}>
                 <Button
                   variant="primary"
                   size="lg"
                   fullWidth
+                  onClick={handleDownload}
                   className="group"
                 >
                   <span className="flex items-center justify-center">
@@ -121,7 +121,6 @@ const ModelDetail: React.FC = () => {
                     <ExternalLink size={18} className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </Button>
-              </a>
 
               <p className="text-xs text-gray-500 text-center mt-2">
                 By accessing this content, you confirm you are 18+ and accept our terms.
