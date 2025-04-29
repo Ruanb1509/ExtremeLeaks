@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, Clock } from 'lucide-react';
 import type { Model } from '../../types';
+import { linkvertise } from '../Linkvertise/Linkvertise';
 
 interface ModelCardProps {
   model: Model;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
-    });
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString('en-US', { 
+  //     month: 'short', 
+  //     day: 'numeric', 
+  //     year: 'numeric' 
+  //   });
+  // };
 
   const formatViews = (views: number) => {
     return new Intl.NumberFormat('en-US', { 
@@ -24,9 +25,13 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
     }).format(views);
   };
 
+  useEffect(() => {
+    linkvertise("1329936", { whitelist: ["localhost"]});
+  }, []);
+
   return (
-    <Link 
-      to={`/model/${model.id}`} 
+    <a 
+      href={`/model/${model.slug}`} 
       className="group block overflow-hidden bg-dark-200 rounded-lg shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -51,7 +56,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
           </div>
         </div>
       </div>
-    </Link>
+    </a>
   );
 };
 

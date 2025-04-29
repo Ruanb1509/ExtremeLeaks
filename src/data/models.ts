@@ -5,7 +5,5 @@ export const models = async (): Promise<Model[]> => {
   if (!response.ok) {
     throw new Error('Erro ao buscar os modelos');
   }
-
-  console.log(response)
   return await response.json();
 };

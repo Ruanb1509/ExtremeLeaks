@@ -8,27 +8,17 @@ import axios from 'axios';
 import { models } from '../data/models'; // Importando a função de fetch
 
 const ModelDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [model, setModel] = useState<Model | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-
-    if (!id) {
-      navigate('/');
-      return;
-    }
-
     const fetchModel = async () => {
       try {
-        // Buscando todos os modelos
         const allModels = await models();
+        const foundModel = allModels.find(m => m.slug === slug);
         
-        // Buscando o modelo pelo id
-        const foundModel = allModels.find(m => m.id === parseInt(id, 10));
-
         if (foundModel) {
           setModel(foundModel);
         } else {
@@ -41,30 +31,31 @@ const ModelDetail: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     fetchModel();
-  }, [id, navigate]);
-
-  const handleBack = () => {
-    navigate(-1);
-  };
+  }, [slug, navigate]);
 
   useEffect(() => {
     linkvertise("1329936", { whitelist: ["mega.nz", "pixeldrain.com", "gofile.io"] });
   }, []);
 
-  const handleDownload = async () => {
-    if (model) {
-      try {
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/${model.id}/view`);
-        window.open(model.megaLink, '_blank');
-      } catch (error) {
-        console.error('Erro ao contar visualização:', error);
-        // Ainda assim abre o link caso a API falhe
-        window.open(model.megaLink, '_blank');
-      }
-    }
+  const handleBack = () => {
+    navigate(-1);
   };
+
+
+
+  // const handleDownload = async () => {
+  //   if (model) {
+  //     try {
+  //       await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/${model.id}/view`);
+  //       window.open(model.megaLink, '_blank');
+  //     } catch (error) {
+  //       console.error('Erro ao contar visualização:', error);
+  //       window.open(model.megaLink, '_blank');
+  //     }
+  //   }
+  // };
 
   if (loading) {
     return (

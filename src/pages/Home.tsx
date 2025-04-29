@@ -14,10 +14,12 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [adNetwork, setAdNetwork] = useState<AdNetwork>('linkvertise');
   const [showAdChoice, setShowAdChoice] = useState(false);
+  const [slug, setSlug] = useState('')
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,6 +43,7 @@ const Home: React.FC = () => {
   
     return () => clearTimeout(timer);
   }, [sortOption]);
+
   
 
   const totalPages = Math.ceil(sortedModels.length / ITEMS_PER_PAGE);

@@ -6,6 +6,7 @@ export interface Model {
   megaLink: string;
   views: number;
   createdAt: string;
+  slug: string
 }
 
 export type SortOption = 'recent' | 'popular';
