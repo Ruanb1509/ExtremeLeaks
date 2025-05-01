@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModelCard from '../components/ui/ModelCard';
 import SearchInput from '../components/ui/SearchInput';
+import Pagination from '../components/ui/pagination';
 import { models } from '../data/models';
 import { Flame, TrendingUp, Clock, Link2, ExternalLink, Search } from 'lucide-react';
 import type { Model, SortOption, AdNetwork } from '../types';
@@ -14,7 +15,6 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [adNetwork, setAdNetwork] = useState<AdNetwork>('linkvertise');
   const [showAdChoice, setShowAdChoice] = useState(false);
-  const [slug, setSlug] = useState('');
   const [nameFilter, setNameFilter] = useState('');
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
                 <ExternalLink size={14} className="ml-2" />
               </button>
 
-              {showAdChoice && (
+              {/* {showAdChoice && (
                 <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-dark-200 rounded-lg shadow-lg overflow-hidden z-10 animate-fade-in">
                   <button
                     onClick={() => handleAdNetworkChange('linkvertise')}
@@ -121,21 +121,35 @@ const Home: React.FC = () => {
                     AdMaven
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Models Grid */}
-      <section className="py-12 bg-dark-300">
+      <section className="py-12 bg-dark-300 flex">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-white mb-4 sm:mb-0">
               Featured <span className="text-primary-500">Models</span>
             </h2>
+
+            <div className="mb-6 w-96">
+            <SearchInput
+              value={nameFilter}
+              onChange={setNameFilter}
+              placeholder="Search by model name..."
+              className="max-w-md mx-auto"
+            />
+            {nameFilter && (
+              <p className="text-gray-400 text-center mt-2">
+                Found {filteredModels.length} result{filteredModels.length !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
             
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 ite">
               <button
                 onClick={() => setSortOption('recent')}
                 className={`px-4 py-2 rounded-lg flex items-center transition-all duration-200 ${
@@ -161,20 +175,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           
-          {/* Search Input */}
-          <div className="mb-6">
-            <SearchInput
-              value={nameFilter}
-              onChange={setNameFilter}
-              placeholder="Search by model name..."
-              className="max-w-md mx-auto"
-            />
-            {nameFilter && (
-              <p className="text-gray-400 text-center mt-2">
-                Found {filteredModels.length} result{filteredModels.length !== 1 ? 's' : ''}
-              </p>
-            )}
-          </div>
+
           
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 min-h-[800px]">
           {isLoading ? (
@@ -204,21 +205,12 @@ const Home: React.FC = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center mt-8 space-x-2">
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`w-10 h-10 rounded-lg transition-all duration-200 ${
-                    currentPage === index + 1
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-dark-200 text-gray-400 hover:bg-dark-100'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              className="mt-8"
+            />
           )}
         </div>
       </section>

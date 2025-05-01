@@ -36,7 +36,7 @@ const ModelDetail: React.FC = () => {
   }, [slug, navigate]);
 
   useEffect(() => {
-    linkvertise("1329936", { whitelist: ["mega.nz", "pixeldrain.com", "gofile.io"] });
+    linkvertise("1329936", { whitelist: ["localhost"] });
   }, []);
 
   const handleBack = () => {
