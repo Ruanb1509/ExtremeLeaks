@@ -1,11 +1,72 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../components/ui/Button';
 import { Lock, Star, CheckCircle } from 'lucide-react';
+import axios from 'axios';
 
 const Premium: React.FC = () => {
+
+
+  const [isPremium, setIspremium] = useState<boolean>(false)
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+
+
+    const token = localStorage.getItem('token')
+
+
+  
+    const Handlepurchase = async () => {
+      if (!token) {
+        alert('Você precisa estar logado');
+        return;
+      }
+    
+      try {
+        // Primeiro, verifica o status do usuário
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/dashboard`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+    
+        const isPremium = response.data.isPremium;
+        const email = response.data.email;
+    
+        if (isPremium) {
+          alert('Você já é Premium');
+          return;
+        }
+    
+        // Agora cria a sessão de compra
+        const paymentResponse = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/purchase`,
+          {
+            email,        
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+    
+        const { url } = paymentResponse.data;
+        window.open(url, "_blank");
+      } catch (err) {
+        console.error('Erro ao iniciar compra:', err.response?.data || err.message);
+        console.log(token)
+        alert('Erro ao iniciar compra. Veja o console para detalhes.');
+      }
+    };
+    
+    
+    
 
   return (
     <main className="pt-20 min-h-screen bg-dark-300">
@@ -53,7 +114,7 @@ const Premium: React.FC = () => {
                       variant="primary" 
                       size="lg" 
                       className="w-full mb-3"
-                      disabled
+                      onClick={Handlepurchase}
                     >
                       <Lock size={16} className="mr-2" />
                       Coming Soon

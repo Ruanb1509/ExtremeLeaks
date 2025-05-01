@@ -40,7 +40,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   
       const user = {
         name: data.name,
-        isPremium: data.isPremium ?? false, // use default if missing
+        isPremium: data.isPremium ?? false,
         id: data.id ?? null,
         email: data.email ?? '', // default
       };

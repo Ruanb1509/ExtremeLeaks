@@ -44,7 +44,6 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, [sortOption]);
 
-  // Apply name filter to the sorted models
   const filteredModels = sortedModels.filter(model => 
     model.name.toLowerCase().includes(nameFilter.toLowerCase())
   );
@@ -53,7 +52,6 @@ const Home: React.FC = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedModels = filteredModels.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Reset to first page when filter changes
   useEffect(() => {
     setCurrentPage(1);
   }, [nameFilter]);
@@ -63,11 +61,7 @@ const Home: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleAdNetworkChange = (network: AdNetwork) => {
-    setAdNetwork(network);
-    localStorage.setItem('preferredAdNetwork', network);
-    setShowAdChoice(false);
-  };
+
 
   return (
     <main>

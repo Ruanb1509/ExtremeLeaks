@@ -18,6 +18,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
   //   });
   // };
 
+
   const formatViews = (views: number) => {
     return new Intl.NumberFormat('en-US', { 
       notation: 'compact',
