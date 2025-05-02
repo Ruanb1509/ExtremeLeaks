@@ -83,8 +83,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         email: data.email ?? '',
       };
   
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('user', JSON.stringify(user));
   
       set({ user, loading: false });
     } catch (error) {
@@ -94,14 +94,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     set({ user: null });
   },
 
   fetchUser: async () => {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    const token = sessionStorage.getItem('token');
+    const savedUser = sessionStorage.getItem('user');
 
     if (!token || !savedUser) return;
 
