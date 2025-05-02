@@ -14,7 +14,7 @@ const Premium: React.FC = () => {
 
 
 
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
 
 
   
@@ -42,6 +42,7 @@ const Premium: React.FC = () => {
           alert('Você já é Premium');
           return;
         }
+        
     
         // Agora cria a sessão de compra
         const paymentResponse = await axios.post(

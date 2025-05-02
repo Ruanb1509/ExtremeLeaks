@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import ModelDetail from './pages/ModelDetail';
 import Premium from './pages/Premium';
 import DMCA from './pages/DMCA';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="/model/:slug" element={<ModelDetail />} />
             <Route path="/premium" element={<Premium />} />
             <Route path="/dmca" element={<DMCA />} />
+            <Route path="/success" element={<PaymentSuccess />} />
+            <Route path="/cancel" element={<PaymentCancel />} />
           </Routes>
         </div>
         <Footer />

@@ -45,10 +45,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
         email: data.email ?? '', // default
       };
   
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('user', JSON.stringify(user));
   
       set({ user, loading: false });
+
+      window.location.reload()
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'An error occurred', loading: false });
       throw error;
