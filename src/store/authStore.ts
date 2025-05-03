@@ -43,6 +43,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isPremium: data.isPremium ?? false,
         id: data.id ?? null,
         email: data.email ?? '',
+        expiredPremium: data.expiredPremium ?? null,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt
       };
   
       sessionStorage.setItem('token', data.token);

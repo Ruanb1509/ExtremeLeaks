@@ -11,31 +11,14 @@ interface ModelCardProps {
 
 const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
   const [isPremium, setIsPremium] = useState(false);
-  const token = sessionStorage.getItem('token')
+
+   const { user} = useAuthStore();
+
+   console.log(user?.isPremium)
+ 
 
   useEffect(() => {
-    const checkPremiumStatus = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/dashboard`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (!res.ok) throw new Error('Erro ao verificar status do usuário');
-        
-        const userData = await res.json();
-        setIsPremium(userData.isPremium);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    checkPremiumStatus();
-  }, [token]);
-
-  useEffect(() => {
-    if (!isPremium) {
+    if (!user?.isPremium) {
       linkvertise("1329936", { whitelist: ["extreme-leaks.vercel.app"] });
     }
   }, [isPremium]);
