@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, Menu, X, User, Crown } from 'lucide-react';
+import { Flame, Menu, X, User, Crown, ChevronDown, LogOut, UserCircle } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import AuthModal from '../auth/AuthModal';
 import Button from '../ui/Button';
+import UserDropdown from './UserDropdown';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const { fetchUser } = useAuthStore();
-
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleUserDropdown = () => {
+    setShowUserDropdown(!showUserDropdown);
   };
 
   useEffect(() => {
@@ -37,11 +43,22 @@ const Header: React.FC = () => {
     setIsOpen(false);
   }, [location]);
 
-useEffect(() => {
-  fetchUser();
-}, []);
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
- 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -72,16 +89,32 @@ useEffect(() => {
 
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <User size={16} className="text-gray-400 mr-2" />
-                    <span className="text-gray-200 font-medium">{user.name}</span>
-                    {user.isPremium && (
-                      <div className="ml-2 flex items-center text-yellow-500">
-                        <Crown size={16} className="mr-1" />
-                        <span className="text-sm font-medium">Premium</span>
-                      </div>
+                  <div className="relative" ref={dropdownRef}>
+                    <button 
+                      onClick={toggleUserDropdown}
+                      className="flex items-center text-gray-200 hover:text-primary-400 transition-colors"
+                    >
+                      <User size={16} className="text-gray-400 mr-2" />
+                      <span className="font-medium">{user.name}</span>
+                      {user.isPremium && (
+                        <div className="ml-2 flex items-center text-yellow-500">
+                          <Crown size={16} className="mr-1" />
+                          <span className="text-sm font-medium">Premium</span>
+                        </div>
+                      )}
+                      <ChevronDown 
+                        size={16} 
+                        className={`ml-2 text-gray-400 transition-transform duration-200 ${
+                          showUserDropdown ? 'transform rotate-180' : ''
+                        }`} 
+                      />
+                    </button>
+                    
+                    {showUserDropdown && (
+                      <UserDropdown user={user} logout={logout} />
                     )}
                   </div>
+                  
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -129,20 +162,61 @@ useEffect(() => {
               
               {user ? (
                 <>
-                  <div className="px-4 py-2 flex items-center">
-                    <User size={16} className="text-gray-400 mr-2" />
-                    <span className="text-gray-200 font-medium">{user.name}</span>
-                    {user.isPremium && (
-                      <div className="ml-2 flex items-center text-yellow-500">
-                        <Crown size={16} className="mr-1" />
-                        <span className="text-sm font-medium">Premium</span>
+                  <div className="px-4 py-2">
+                    <button
+                      onClick={toggleUserDropdown}
+                      className="w-full flex items-center justify-between text-gray-200 hover:text-primary-400"
+                    >
+                      <div className="flex items-center">
+                        <User size={16} className="text-gray-400 mr-2" />
+                        <span className="font-medium">{user.name}</span>
+                        {user.isPremium && (
+                          <div className="ml-2 flex items-center text-yellow-500">
+                            <Crown size={16} className="mr-1" />
+                            <span className="text-sm font-medium">Premium</span>
+                          </div>
+                        )}
+                      </div>
+                      <ChevronDown 
+                        size={16} 
+                        className={`text-gray-400 transition-transform duration-200 ${
+                          showUserDropdown ? 'transform rotate-180' : ''
+                        }`} 
+                      />
+                    </button>
+                    
+                    {showUserDropdown && (
+                      <div className="mt-2 pl-6 pr-2 py-2 bg-dark-400 rounded-lg">
+                        <Link to='/' className="flex items-center py-2 text-gray-200 hover:text-primary-400">
+                          <UserCircle size={16} className="mr-2" />
+                          <span>Your Account</span>
+                        </Link>
+                        <div className="px-2 py-3 space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400 text-sm">ID:</span>
+                            <span className="text-gray-200 text-sm">{user.id}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400 text-sm">Email:</span>
+                            <span className="text-gray-200 text-sm">{user.email}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400 text-sm">Status:</span>
+                            <span className="text-gray-200 text-sm">{user.isPremium ? 'Premium' : 'Free'}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400 text-sm">Created:</span>
+                            <span className="text-gray-200 text-sm">{new Date(user.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
                   <button
                     onClick={logout}
-                    className="px-4 py-2 text-primary-500 hover:bg-dark-400 rounded-lg transition-colors text-left"
+                    className="px-4 py-2 text-primary-500 hover:bg-dark-400 rounded-lg transition-colors text-left flex items-center"
                   >
+                    <LogOut size={16} className="mr-2" />
                     Logout
                   </button>
                 </>

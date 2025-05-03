@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { User, AuthState, LoginCredentials, RegisterCredentials, AuthResponse } from '../types';
+import type { User, AuthState, LoginCredentials, RegisterCredentials, AuthResponse } from '../types/index';
 
 interface AuthStore extends AuthState {
   setUser: (user: User | null) => void;
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         name: data.name,
         isPremium: data.isPremium ?? false,
         id: data.id ?? null,
-        email: data.email ?? '', // default
+        email: data.email ?? '',
       };
   
       sessionStorage.setItem('token', data.token);
@@ -106,8 +106,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     if (!token || !savedUser) return;
 
     try {
-      // Se quiser validar via backend:
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/me`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/dashboard`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -120,7 +119,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       const user: User = await response.json();
       set({ user });
     } catch (error) {
-      // Fallback para user salvo localmente (ou remover usuário do estado)
       set({ user: JSON.parse(savedUser) });
     }
   },
