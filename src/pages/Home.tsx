@@ -5,6 +5,7 @@ import Pagination from '../components/ui/pagination';
 import { models } from '../data/models';
 import { Flame, TrendingUp, Clock, Link2, ExternalLink, Search } from 'lucide-react';
 import type { Model, SortOption, AdNetwork } from '../types';
+import { useAuthStore } from '../store/authStore';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -16,6 +17,8 @@ const Home: React.FC = () => {
   const [adNetwork, setAdNetwork] = useState<AdNetwork>('linkvertise');
   const [showAdChoice, setShowAdChoice] = useState(false);
   const [nameFilter, setNameFilter] = useState('');
+      const { fetchUser } = useAuthStore();
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,6 +63,8 @@ const Home: React.FC = () => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  
+  console.log(fetchUser)
 
 
 
